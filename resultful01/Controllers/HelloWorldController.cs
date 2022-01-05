@@ -9,13 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace resultful01.Controllers
 {
     [Route("api/[controller]")]
-    public class HelloWorldController : Controller
+    [ApiController]
+    public class HelloWorldController : ControllerBase
     {
         // GET: api/values
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "Hello", "World" };
         }
 
         // GET api/values/5
