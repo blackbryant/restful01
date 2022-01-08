@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using resultful01.Entity;
 
 namespace resultful01
 {
@@ -25,8 +25,15 @@ namespace resultful01
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            /*services.AddDbContext<BloggingContext>(
+                options => options.UseSqlite($"Data Source=blogging.db")
+              );
+            */
+            services.AddEntityFrameworkSqlite().AddDbContext<BloggingContext>();
             services.AddControllers();
+            
+            services.AddAutoMapper(typeof(Startup));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

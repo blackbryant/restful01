@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,6 +13,13 @@ namespace resultful01.Controllers
     [ApiController]
     public class HelloWorldController : ControllerBase
     {
+        private IMapper _iMapper; 
+
+        public HelloWorldController(IMapper imapper) {
+            this._iMapper = imapper;
+        }
+
+
         // GET: api/values
         [HttpGet]
         public IEnumerable<string> Get()
@@ -19,12 +27,26 @@ namespace resultful01.Controllers
             return new string[] { "Hello", "World" };
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
+
+        [HttpGet]
+        public IActionResult GetA() {
+            return Ok(new String[]{ "Hello","world  "});
+
+
         }
+
+
+        [HttpGet]
+        public IActionResult GetFail()
+        {
+            //status
+            Response.StatusCode = 404;
+            //or
+            return NotFound("not founc");
+           
+
+        }
+
 
         // POST api/values
         [HttpPost]
