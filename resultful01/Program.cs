@@ -14,9 +14,11 @@ namespace resultful01
     {
         public static void Main(string[] args)
         {
-           // blog();
+           //blog();
             CreateHostBuilder(args).Build().Run();
         }
+        
+
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)

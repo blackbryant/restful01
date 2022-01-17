@@ -13,6 +13,10 @@
     <None Remove="Microsoft.EntityFrameworkCore.Sqlite" />
     <None Remove="Entity\" />
     <None Remove="Dtos\" />
+    <None Remove="QueryParameters\" />
+    <None Remove="AutpMapper\" />
+    <None Remove="Migrations\" />
+    <None Remove="DAO\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.0" />
@@ -27,5 +31,9 @@
   <ItemGroup>
     <Folder Include="Entity\" />
     <Folder Include="Dtos\" />
+    <Folder Include="QueryParameters\" />
+    <Folder Include="AutpMapper\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="DAO\" />
   </ItemGroup>
 </Project>

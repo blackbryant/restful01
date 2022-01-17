@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using resultful01.Dtos;
+using resultful01.Entity;
+using System.Linq;
+
+namespace resultful01.DAO
+{
+    public class PostDAO
+    {
+        public readonly  BloggingContext _bloggingContext;
+
+        public PostDAO(BloggingContext bloggingContext)
+        {
+            this._bloggingContext = bloggingContext;
+             
+        }
+
+
+        public int Create(List<Post> posts)
+        {
+            int result = 0;
+            this._bloggingContext.Posts.AddRange(posts);
+            result =  this._bloggingContext.SaveChanges();
+           
+
+            return result; 
+
+        }
+
+        
+
+
+
+
+    }
+}
