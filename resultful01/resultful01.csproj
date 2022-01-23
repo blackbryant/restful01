@@ -17,6 +17,8 @@
     <None Remove="AutpMapper\" />
     <None Remove="Migrations\" />
     <None Remove="DAO\" />
+    <None Remove="EntityValidation\" />
+    <None Remove="Service\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.0" />
@@ -35,5 +37,7 @@
     <Folder Include="AutpMapper\" />
     <Folder Include="Migrations\" />
     <Folder Include="DAO\" />
+    <Folder Include="EntityValidation\" />
+    <Folder Include="Service\" />
   </ItemGroup>
 </Project>

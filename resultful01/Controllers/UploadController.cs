@@ -1,52 +1,124 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using resultful01.Entity;
+using resultful01.QueryParameters;
 
 namespace resultful01.Controllers
 {
     [Route("api/[controller]")]
-    public class UploadController :Controller
+    [ApiController]
+    public class UploadController : ControllerBase
     {
         private readonly BloggingContext _bloggingContext;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _env; 
 
-        public UploadController(BloggingContext bloggingContext, IMapper mapper)
+        public UploadController(BloggingContext bloggingContext, IMapper mapper, IWebHostEnvironment env)
         {
             this._bloggingContext = bloggingContext;
             this._mapper = mapper;
+            this._env = env; 
 
         }
 
-        [HttpGet("{UploadFileId}")]
-        public ActionResult<IEnumerable<UploadFile>> Get(Guid UploadFileId)
+        [HttpPost]
+        public IActionResult Post(IEnumerable<IFormFile> files, [FromForm]Guid id)
         {
-            Console.WriteLine("UploadFile:"+ UploadFileId);
-            Console.WriteLine("UploadFile:" + _bloggingContext.UploadFile.Any(a => a.UploadFileId.Equals(UploadFileId)) );
-            if (_bloggingContext.UploadFile.Any(a => a.UploadFileId == UploadFileId)) {
-                return NotFound("找不到檔案");
-            }
-
-            var result = from a in _bloggingContext.UploadFile
-                         
-                         select   new {
-                            UploadFileId =  a.UploadFileId ,
-                            Name = a.Name,
-                            Src = a.Src
-                         };
-
-            if (result == null || result.Count() == 0)
+            
+            string root = _env.ContentRootPath+Path.DirectorySeparatorChar+@"files2"+ Path.DirectorySeparatorChar;
+            Console.WriteLine("root:" + root);
+            if (!Directory.Exists(root))
             {
-                return NotFound("找不到檔案2");
+                Directory.CreateDirectory(root); 
+            }
+            try
+            {
+                foreach (var formFile in files)
+                {
+                    string fileName = formFile.FileName;
+                    Console.WriteLine("fileName:" + fileName);
+                    using (var stream = System.IO.File.Create(root + fileName))
+                    {
+                        formFile.CopyTo(stream);
+                        UploadFile insert = new UploadFile
+                        {
+                            UploadFileId = id,
+                            Src = root + fileName,
+                            Name = fileName
+
+                        };
+
+                        _bloggingContext.UploadFile.Add(insert);
+                    }
+                    _bloggingContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content("發生錯誤"+ex.Message);
             }
 
 
-            return Ok(result); 
+
+            return Ok();
 
         }
 
-         
+        [HttpPost("PostJson")]
+        public IActionResult PostJson([FromForm]UploadParam uploadParam)
+        {
+            Console.WriteLine("json:" + uploadParam.Form); 
+            //先轉成物件
+           // UploadFile uploadFile = JsonSerializer.Deserialize<UploadFile>(form);
+
+
+
+            string root = _env.ContentRootPath + Path.DirectorySeparatorChar + @"files2" + Path.DirectorySeparatorChar;
+            Console.WriteLine("root:" + root);
+            if (!Directory.Exists(root))
+            {
+                Directory.CreateDirectory(root);
+            }
+            try
+            {
+                foreach (var formFile in uploadParam.Files)
+                {
+                    string fileName = formFile.FileName;
+                    Console.WriteLine("fileName:" + fileName);
+                    using (var stream = System.IO.File.Create(root + fileName))
+                    {
+                        formFile.CopyTo(stream);
+                        UploadFile insert = new UploadFile
+                        {
+                            UploadFileId = uploadParam.Form.UploadFileId,
+                            Src = root + fileName,
+                            Name = fileName
+
+                        };
+
+                        _bloggingContext.UploadFile.Add(insert);
+                    }
+                    _bloggingContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                return Content("發生錯誤" + ex.Message);
+            }
+
+
+
+            return Ok();
+
+        }
+
+
     }
 }

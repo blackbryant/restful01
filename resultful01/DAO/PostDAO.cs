@@ -29,8 +29,24 @@ namespace resultful01.DAO
 
         }
 
-        
 
+
+        public int delete2(int id )
+        {
+            int result = 0;
+            var delete = from post in _bloggingContext.Posts
+                         where post.BlogId == id
+                         select post;
+                          
+            if (delete != null)
+            {
+                _bloggingContext.RemoveRange(delete);
+                _bloggingContext.SaveChanges();
+                result = delete.Count(); 
+            }
+
+            return result; 
+        }
 
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using resultful01.Dtos;
@@ -31,6 +32,7 @@ namespace resultful01.Controllers
 
         // GET: api/Blogs
         [HttpGet]
+        [Authorize(Roles ="admin")]
         public IEnumerable<BlogDto> Get()
         {
             Console.WriteLine("BlogDto");
@@ -49,6 +51,7 @@ namespace resultful01.Controllers
 
         //AutoMapper 
         [HttpGet("AutoMapper")]
+        
         public IEnumerable<BlogDto> AutoMapper()
         {
             Console.WriteLine("AutoMapper");
@@ -73,27 +76,11 @@ namespace resultful01.Controllers
 
         }
 
-        // GET: api/UploadFiles
-        [HttpGet]
-        public IEnumerable<BlogDto> UploadFiles()
-        {
-            Console.WriteLine("BlogDto");
-            var result = from blog in _bloggingContext.Blogs
-                         join post in _bloggingContext.Posts on blog.BlogId equals post.BlogId
-                         select new BlogDto
-                         {
-                             BlogId = blog.BlogId,
-                             Title = post.Title,
-                             Content = post.Title
-                         };
-
-
-            return result;
-
-        }
+       
 
         // GET api/values/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "employee")]
         public BlogDto Get(int id)
         {
             Console.WriteLine("id:" + id);
